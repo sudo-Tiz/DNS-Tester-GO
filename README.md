@@ -11,7 +11,7 @@
 
 High-performance DNS testing tool supporting UDP, TCP, DoT, DoH, and DoQ protocols.
 
-> ⚠️ **Beta Status**: This project is under active development. Bugs and breaking changes may occur. Contributions and feedback are highly encouraged!
+> ⚠️ **Beta Status**: This project is under active development. Bugs and breaking changes may occur. Documentation is made by AI and may contain errors. Contributions and feedback are highly encouraged!
 
 📖 **[Documentation](https://sudo-Tiz.github.io/dns-tester-go)** | 
 🚀 **[Quick Start](https://sudo-Tiz.github.io/dns-tester-go/docs/quickstart)** |

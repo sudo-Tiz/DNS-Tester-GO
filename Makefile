@@ -226,6 +226,8 @@ swagger:
 	@go run github.com/swaggo/swag/cmd/swag@latest init \
 		-g cmd/api/main.go -o internal/api/docs \
 		--parseDependency --parseInternal
-	@echo "✅ Swagger docs → internal/api/docs/"
-	@echo "   - swagger.yaml, swagger.json (versioned)"
+	@cp internal/api/docs/swagger.yaml docs/openapi.yaml
+	@echo "✅ Swagger docs generated:"
+	@echo "   - internal/api/docs/swagger.{yaml,json} (for code imports)"
+	@echo "   - docs/openapi.yaml (for GitHub/documentation)"
 	@echo "   - docs.go (auto-generated, gitignored)"

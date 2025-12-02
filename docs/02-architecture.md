@@ -23,7 +23,6 @@ graph TB
     Redis[(Redis)]
     Queue[Asynq Queue]
     Worker1[Worker 1]
-    Worker2[Worker 2]
     WorkerN[Worker N]
     DNS[DNS Servers<br/>UDP/TCP/DoT/DoH/DoQ]
     Prom[Prometheus]
@@ -32,19 +31,15 @@ graph TB
     API -->|Enqueue| Queue
     Queue -->|Store| Redis
     Queue -->|Dequeue| Worker1
-    Queue -->|Dequeue| Worker2
     Queue -->|Dequeue| WorkerN
     Worker1 -->|Query| DNS
-    Worker2 -->|Query| DNS
     WorkerN -->|Query| DNS
     Worker1 -->|Store Result| Redis
-    Worker2 -->|Store Result| Redis
     WorkerN -->|Store Result| Redis
     Client -->|GET /tasks| API
     API -->|Fetch| Redis
     API -->|Expose /metrics| Prom
     Worker1 -.->|Metrics| Prom
-    Worker2 -.->|Metrics| Prom
     WorkerN -.->|Metrics| Prom
 ```
 
@@ -170,28 +165,21 @@ stateDiagram-v2
 graph TB
     Ingress[Ingress Controller]
     API1[API Pod 1]
-    API2[API Pod 2]
     APIN[API Pod N]
     Redis[Redis StatefulSet]
     Worker1[Worker Pod 1]
-    Worker2[Worker Pod 2]
     WorkerN[Worker Pod N]
     Prom[Prometheus]
     
     Ingress --> API1
-    Ingress --> API2
     Ingress --> APIN
     API1 --> Redis
-    API2 --> Redis
     APIN --> Redis
     Redis --> Worker1
-    Redis --> Worker2
     Redis --> WorkerN
     API1 -.->|/metrics| Prom
-    API2 -.->|/metrics| Prom
     APIN -.->|/metrics| Prom
     Worker1 -.->|metrics| Prom
-    Worker2 -.->|metrics| Prom
     WorkerN -.->|metrics| Prom
 ```
 
