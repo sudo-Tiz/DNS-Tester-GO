@@ -22,6 +22,8 @@ jobs:
           cache: true
       - name: Install dependencies
         run: go mod download
+      - name: Generate Swagger docs
+        run: make swagger-gen
       - name: Run go vet
         run: go vet ./...
       - name: Run unit tests
