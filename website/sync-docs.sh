@@ -11,19 +11,27 @@ src="$ROOT_DIR/docs"
 dst="$SCRIPT_DIR/docs"
 root="$ROOT_DIR"
 
-echo "🔄 Syncing docs...\n"
+echo "🔄 Syncing docs..."
+echo ""
+
+# Create destination directory if it doesn't exist
+mkdir -p "$dst"
 
 # Process all numbered docs
 for f in "$src"/[0-9][0-9]-*.md; do
   [ -f "$f" ] || continue
   base=$(basename "$f")
-  pos=$((10#${base%%-*}))                    # Extract position (remove leading zeros)
+  # Extract position number (strip leading zeros to avoid octal interpretation)
+  pos_raw="${base%%-*}"
+  # Remove leading zeros: 01 -> 1, 08 -> 8, 10 -> 10
+  pos=$(echo "$pos_raw" | sed 's/^0*//')
+  [ -z "$pos" ] && pos=0  # Handle case of "00"
   out="${base#*-}"                            # Output filename without NN- prefix
   title=$(sed -n 's/^# //p;q' "$f")          # Extract first # title
 
   # Generate file: frontmatter + content (skip line 1) + fix links
   # Strip NN- from (NN-file.md) → (file.md)
-  { printf -- '---\nsidebar_position: %d\ntitle: %s\n---\n\n' "$pos" "$title"
+  { printf -- '---\nsidebar_position: %s\ntitle: %s\n---\n\n' "$pos" "$title"
     sed '1d; s|(\([0-9][0-9]-\)\([^)]*\.md\))|(\2)|g' "$f"
   } > "$dst/$out"
 
@@ -59,4 +67,5 @@ if [ -f "$ROOT_DIR/internal/api/docs/swagger.json" ]; then
   echo "✅ openapi.json → static/"
 fi
 
-echo "\n✨ Done! /docs/*.md → /website/docs/*.md"
+echo ""
+echo "✨ Done! /docs/*.md → /website/docs/*.md"
