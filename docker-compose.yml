@@ -22,7 +22,7 @@ services:
   # Scale workers: docker-compose --profile prod up --scale dnstestergo-worker=5
   # ============================================================================
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     profiles: ["prod", "test"]
     restart: unless-stopped
     ports:

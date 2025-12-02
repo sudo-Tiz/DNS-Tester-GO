@@ -1,7 +1,7 @@
 # Dockerfile for Docusaurus documentation (dev only)
 # Production build handled by GitHub Actions
 
-FROM node:20-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 
