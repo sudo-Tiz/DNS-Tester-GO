@@ -18,12 +18,4 @@ jobs:
           cache: true
       - name: Generate Swagger docs (for validation)
         run: make swagger
-      - name: Install prek
-        uses: j178/setup-prek@v1
-      - name: Cache prek
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/prek
-          key: prek-${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: Run prek
-        run: prek run --all-files --show-diff-on-failure
+      - uses: j178/prek-action@v1
