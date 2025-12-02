@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/sudo-Tiz/DNS-Tester-GO/compare/v1.0.0...v1.0.1) (2025-12-02)
+
+
+### 🐛 Bug Fixes
+
+* typo in testing; exclude swagger from pre-commit lint; add swagger generation to docekrfile ([132385c](https://github.com/sudo-Tiz/DNS-Tester-GO/commit/132385ce1d525bf5539e51e3e8ac4b32a05fee16))
+
 ## 1.0.0 (2025-12-02)
 
 
