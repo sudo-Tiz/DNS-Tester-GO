@@ -1,0 +1,151 @@
+services:
+  # ============================================================================
+  # Development: Single container with memory mode (no Redis)
+  # Usage: docker-compose --profile dev up
+  # ============================================================================
+  dev:
+    build:
+      context: .
+      target: dev
+    profiles: ["dev"]
+    ports:
+      - "5000:5000"
+    environment:
+      - CONFIG_PATH=/app/conf/config.example.yaml
+    volumes:
+      - ./conf/config.example.yaml:/app/conf/config.example.yaml
+    networks:
+      - dns-tester
+  # ============================================================================
+  # Production: Microservices architecture with Redis
+  # Usage: docker-compose --profile prod up
+  # Scale workers: docker-compose --profile prod up --scale dnstestergo-worker=5
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    profiles: ["prod", "test"]
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server --appendonly yes --appendfsync everysec --auto-aof-rewrite-percentage 100 --auto-aof-rewrite-min-size 64mb
+
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - dns-tester
+  dnstestergo-server:
+    build:
+      context: .
+      target: server
+    profiles: ["prod", "test"]
+    restart: unless-stopped
+    environment:
+      - CONFIG_PATH=/app/conf/config.yaml
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./conf/config.yaml:/app/conf/config.yaml
+    ports:
+      - "5000:5000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      dnstestergo-worker:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - dns-tester
+    command: ["--config", "/app/conf/config.yaml", "--redis", "redis://redis:6379/0"]
+  dnstestergo-worker:
+    build:
+      context: .
+      target: worker
+    profiles: ["prod", "test"]
+    restart: unless-stopped
+    environment:
+      - CONFIG_PATH=/app/conf/config.yaml
+      - REDIS_URL=redis://redis:6379/0
+    # Note: Metrics disabled by default to avoid port conflicts with multiple workers
+    # API collects metrics when clients poll results instead
+    # To enable worker metrics (single worker dev): add --enable-metrics flag
+    volumes:
+      - ./conf/config.yaml:/app/conf/config.yaml
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      replicas: 3
+    networks:
+      - dns-tester
+    command: ["--config", "/app/conf/config.yaml", "--redis", "redis://redis:6379/0"]
+  # Optional: Single worker with metrics enabled (uncomment for development)
+  # dnstestergo-worker-with-metrics:
+  #   build:
+  #     context: .
+  #     target: worker
+  #   profiles: ["prod-metrics"]
+  #   restart: unless-stopped
+  #   environment:
+  #     - CONFIG_PATH=/app/conf/config.yaml
+  #     - REDIS_URL=redis://redis:6379/0
+  #   ports:
+  #     - "9091:9091"
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - dns-tester
+  #   command: ["--config", "/app/conf/config.yaml", "--redis", "redis://redis:6379/0", "--enable-metrics", "--metrics-port", "9091"]
+
+  # ============================================================================
+  # Query: CLI tool for one-off DNS queries
+  # Usage: docker-compose run --rm dnstestergo-query query example.com A
+  # ============================================================================
+  dnstestergo-query:
+    build:
+      context: .
+      target: query
+    profiles: ["query"]
+    environment:
+      - CONFIG_PATH=/app/conf/config.yaml
+    volumes:
+      - ./conf/config.yaml:/app/conf/config.yaml
+    entrypoint: ["dnstestergo"]
+    networks:
+      - dns-tester
+  # ============================================================================
+  # Test: Integration tests with full stack (Redis + Server + Worker)
+  # Usage: docker-compose --profile test up
+  # ============================================================================
+  test:
+    build:
+      context: .
+      target: builder
+    profiles: ["test"]
+    working_dir: /build
+    environment:
+      - RUN_INTEGRATION_TESTS=1
+      - API_BASE_URL=http://dnstestergo-server:5000
+    depends_on:
+      redis:
+        condition: service_healthy
+      dnstestergo-server:
+        condition: service_healthy
+    networks:
+      - dns-tester
+    command: ["go", "test", "-v", "-tags=integration", "./integration/..."]
+networks:
+  dns-tester:
+    driver: bridge
+volumes:
+  redis-data:

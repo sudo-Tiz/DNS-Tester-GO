@@ -1,0 +1,37 @@
+version: "2"
+run:
+  timeout: 5m
+  tests: true
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - misspell
+    - revive
+    - gosec
+    - unconvert
+    - dupl
+    - goconst
+    - gocyclo
+    - copyloopvar
+linters-settings:
+  gocyclo:
+    # Temporarily allow higher complexity for runServer (TODO: refactor)
+    min-complexity: 35
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  misspell:
+    locale: US
+  dupl:
+    threshold: 100
+issues:
+  exclude-rules:
+    # Allow security and duplication exceptions in tests
+    - path: _test\.go
+      linters:
+        - gosec # Tests don't need strong crypto
+        - dupl # Duplication acceptable in test code

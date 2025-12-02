@@ -1,0 +1,59 @@
+# DNS Tester GO - Configuration Example
+# This file shows all available configuration options with their default values
+# DNS Servers Configuration (REQUIRED)
+servers:
+  - ip: "9.9.9.9"
+    hostname: "dns.quad9.net"
+    services: ["do53/udp", "do53/tcp", "dot", "doh"]
+    tags: ["DNS_QUAD9"]
+  - ip: "9.9.9.10"
+    hostname: "dns10.quad9.net"
+    port: 53
+    services: ["do53/udp", "do53/tcp"]
+    tags: ["DNS_QUAD9"]
+  - ip: "94.140.14.14"
+    hostname: "dns.adguard-dns.com"
+    services: ["do53/udp", "do53/tcp", "dot", "doh"]
+    tags: ["DNS_ADGUARD"]
+  - hostname: "doh.opendns.com"
+    services: ["doh"]
+    tags: ["DNS_OPENDNS"]
+# Rate Limiting Configuration (OPTIONAL)
+# Controls API rate limiting per IP address
+rate_limiting:
+  requests_per_second: 10 # Maximum requests per second per IP (default: 10)
+  burst_size: 20 # Burst capacity for short-term peaks (default: 20)
+# HTTP Server Configuration (OPTIONAL)
+# Controls the API server behavior
+server:
+  host: "0.0.0.0" # Listen address (default: "0.0.0.0")
+  port: "5000" # Listen port (default: "5000")
+  read_timeout: 15 # HTTP read timeout in seconds (default: 15)
+  write_timeout: 15 # HTTP write timeout in seconds (default: 15)
+  idle_timeout: 60 # HTTP idle timeout in seconds (default: 60)
+# Worker Configuration (OPTIONAL)
+# Controls the background task workers
+worker:
+  max_workers: 4 # Number of concurrent workers (default: 4)
+  cleanup_interval: 10 # Task cleanup interval in minutes (default: 10)
+# DNS Query Configuration (OPTIONAL)
+# Controls DNS query behavior
+dns:
+  timeout: 5 # DNS query timeout in seconds (default: 5)
+  max_servers_per_req: 50 # Maximum DNS servers per API request (default: 50)
+  max_concurrent_queries: 500 # Maximum concurrent DNS queries (default: 500)
+  max_retries: 3 # Number of retries per DNS query (default: 3)
+
+# Notes:
+# - All sections except 'servers' are optional
+# - Environment variables can override some settings:
+#   - DNS_TESTER_HOST overrides server.host
+#   - DNS_TESTER_PORT overrides server.port
+#   - MAX_WORKERS overrides worker.max_workers
+#   - REDIS_URL enables Redis backend for task queue
+# - Supported DNS services:
+#   - do53/udp: DNS over UDP (port 53)
+#   - do53/tcp: DNS over TCP (port 53)
+#   - dot: DNS over TLS (port 853)
+#   - doh: DNS over HTTPS (port 443)
+#   - doq: DNS over QUIC (port 853)

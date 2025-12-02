@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/sudo-Tiz/DNS-Tester-GO/discussions
+    about: Ask questions and discuss with the community
+  - name: Documentation
+    url: https://sudo-Tiz.github.io/DNS-Tester-GO/
+    about: Read the documentation

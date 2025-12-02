@@ -1,0 +1,17 @@
+# Dependencies (excluded, npm ci will install)
+node_modules
+
+# Build output (GitHub Actions handles this)
+.docusaurus
+build
+
+# Development files
+.git
+.github
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md
+
+# Logs
+*.log

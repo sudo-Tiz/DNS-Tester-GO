@@ -1,0 +1,169 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.x'
+          cache: true
+      - name: Install semantic-release
+        run: |
+          npm install -g semantic-release@23 \
+            @semantic-release/git@10 \
+            @semantic-release/changelog@6 \
+            @semantic-release/github@10 \
+            @semantic-release/exec@6 \
+            conventional-changelog-conventionalcommits@7
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+      - name: Get version
+        id: get_version
+        run: |
+          if [ -f VERSION ]; then
+            VERSION=$(cat VERSION)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "has_version=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_version=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Generate Swagger docs
+        if: steps.get_version.outputs.has_version == 'true'
+        run: make swagger-gen
+      - name: Build multi-platform binaries
+        if: steps.get_version.outputs.has_version == 'true'
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          LDFLAGS="-w -s -X main.version=$VERSION"
+
+          mkdir -p dist
+
+          # Linux AMD64
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-linux-amd64 ./cmd/dnstestergo
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-server-linux-amd64 ./cmd/api
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-worker-linux-amd64 ./cmd/worker
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-query-linux-amd64 ./cmd/query
+
+          # Linux ARM64
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-linux-arm64 ./cmd/dnstestergo
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-server-linux-arm64 ./cmd/api
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-worker-linux-arm64 ./cmd/worker
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-query-linux-arm64 ./cmd/query
+
+          # MacOS AMD64
+          GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-darwin-amd64 ./cmd/dnstestergo
+          GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-server-darwin-amd64 ./cmd/api
+          GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-worker-darwin-amd64 ./cmd/worker
+          GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-query-darwin-amd64 ./cmd/query
+
+          # MacOS ARM64
+          GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-darwin-arm64 ./cmd/dnstestergo
+          GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-server-darwin-arm64 ./cmd/api
+          GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-worker-darwin-arm64 ./cmd/worker
+          GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="$LDFLAGS" \
+            -o dist/dnstestergo-query-darwin-arm64 ./cmd/query
+      - name: Login to GitHub Container Registry
+        if: steps.get_version.outputs.has_version == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        if: steps.get_version.outputs.has_version == 'true'
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push Docker images (multi-target)
+        if: steps.get_version.outputs.has_version == 'true'
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          REPO="ghcr.io/${{ github.repository }}"
+
+          # Build and push server image
+          docker buildx build \
+            --target server \
+            --platform linux/amd64,linux/arm64 \
+            --push \
+            --tag ${REPO}:server-${VERSION} \
+            --tag ${REPO}:server-latest \
+            --build-arg VERSION=${VERSION} \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            .
+
+          # Build and push worker image
+          docker buildx build \
+            --target worker \
+            --platform linux/amd64,linux/arm64 \
+            --push \
+            --tag ${REPO}:worker-${VERSION} \
+            --tag ${REPO}:worker-latest \
+            --build-arg VERSION=${VERSION} \
+            --cache-from type=gha \
+            .
+
+          # Build and push query image
+          docker buildx build \
+            --target query \
+            --platform linux/amd64,linux/arm64 \
+            --push \
+            --tag ${REPO}:query-${VERSION} \
+            --tag ${REPO}:query-latest \
+            --build-arg VERSION=${VERSION} \
+            --cache-from type=gha \
+            .
+
+          # Build and push all-in-one image
+          docker buildx build \
+            --target all \
+            --platform linux/amd64,linux/arm64 \
+            --push \
+            --tag ${REPO}:all-${VERSION} \
+            --tag ${REPO}:all-latest \
+            --tag ${REPO}:latest \
+            --tag ${REPO}:${VERSION} \
+            --build-arg VERSION=${VERSION} \
+            --cache-from type=gha \
+            .
+      - name: Upload release artifacts
+        if: steps.get_version.outputs.has_version == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          files: |
+            dist/*
+          generate_release_notes: true

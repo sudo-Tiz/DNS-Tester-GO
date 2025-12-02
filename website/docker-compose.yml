@@ -1,0 +1,32 @@
+services:
+  # Development server with hot-reload
+  docs-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source files for hot reload
+      - ./docs:/app/docs
+      - ./src:/app/src
+      - ./static:/app/static
+      - ./blog:/app/blog
+      - ./docusaurus.config.js:/app/docusaurus.config.js
+      - ./sidebars.js:/app/sidebars.js
+      - ./package.json:/app/package.json
+      # Persistent node_modules (avoid reinstall)
+      - docs_node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - FAST_REFRESH=true
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  docs_node_modules:
