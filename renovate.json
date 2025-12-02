@@ -28,10 +28,13 @@
   },
   "packageRules": [
     {
-      "matchCategories": [
-        "golang"
-      ],
+      "description": "Allow workflow updates",
+      "matchManagers": ["github-actions"],
       "enabled": true
+    },
+    { "matchCategories": [
+        "golang"
+      ]
     },
     {
       "description": "Group Go minor updates",
