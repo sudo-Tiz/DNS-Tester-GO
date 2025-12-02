@@ -1,4 +1,4 @@
-module github.com/sudo-Tiz/DNS-Tester-GO
+module github.com/sudo-Tiz/dns-tester-go
 
 go 1.25.2
 

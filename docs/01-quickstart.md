@@ -1,6 +1,6 @@
 # Quick Start
 
-Deploy and test DNS-Tester-GO in 2 minutes.
+Deploy and test dns-tester-go in 2 minutes.
 
 > 📦 **Need installation help?** See [Installation Guide](09-installation.md)
 

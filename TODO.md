@@ -49,7 +49,7 @@
 
 ## 💡 Ideas
 
-Have an idea? [Open an issue](https://github.com/sudo-Tiz/DNS-Tester-GO/issues) with the `enhancement` label!
+Have an idea? [Open an issue](https://github.com/sudo-Tiz/dns-tester-go/issues) with the `enhancement` label!
 
 ## 🤝 Contributing
 

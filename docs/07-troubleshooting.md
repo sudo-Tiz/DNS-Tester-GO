@@ -156,8 +156,8 @@ docker compose ps
 
 ## 🆘 Get Help
 
-- **[GitHub Issues](https://github.com/sudo-Tiz/DNS-Tester-GO/issues)** - Bug reports
-- **[GitHub Discussions](https://github.com/sudo-Tiz/DNS-Tester-GO/discussions)** - Questions
+- **[GitHub Issues](https://github.com/sudo-Tiz/dns-tester-go/issues)** - Bug reports
+- **[GitHub Discussions](https://github.com/sudo-Tiz/dns-tester-go/discussions)** - Questions
 
 ---
 

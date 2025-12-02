@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/api"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/config"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/models"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/normalize"
+	"github.com/sudo-Tiz/dns-tester-go/internal/api"
+	"github.com/sudo-Tiz/dns-tester-go/internal/config"
+	"github.com/sudo-Tiz/dns-tester-go/internal/models"
+	"github.com/sudo-Tiz/dns-tester-go/internal/normalize"
 )
 
 const (

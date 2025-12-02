@@ -1,6 +1,6 @@
 # CLI Guide
 
-DNS-Tester-GO provides three command-line tools for different use cases.
+dns-tester-go provides three command-line tools for different use cases.
 
 ---
 

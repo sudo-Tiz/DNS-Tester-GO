@@ -45,7 +45,7 @@
     }
   ],
   "ignoreDeps": [
-    "github.com/sudo-Tiz/DNS-Tester-GO"
+    "github.com/sudo-Tiz/dns-tester-go"
   ],
   "postUpdateOptions": ["gomodTidy"],
   "golang": {

@@ -14,7 +14,7 @@ REST API for DNS testing with asynchronous task processing.
 - **Website**: Synced to `website/static/` by `sync-docs.sh` script
 
 **Online Viewer:**
-- [Petstore Swagger Viewer](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sudo-Tiz/DNS-Tester-GO/main/docs/openapi.yaml) - View and test the published spec
+- [Petstore Swagger Viewer](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sudo-Tiz/dns-tester-go/main/docs/openapi.yaml) - View and test the published spec
 
 ---
 

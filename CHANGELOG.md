@@ -10,8 +10,8 @@
 
 ### 🐛 Bug Fixes
 
-* sync-docs script to work with cicd ([5e8f790](https://github.com/sudo-Tiz/DNS-Tester-GO/commit/5e8f790c94d01fd0ed1e9a4e2a344872265499f4))
-* update branch name in ci master => main ([fd8d7a4](https://github.com/sudo-Tiz/DNS-Tester-GO/commit/fd8d7a42488fbddc37c998315877daee966510b5))
+* sync-docs script to work with cicd ([5e8f790](https://github.com/sudo-Tiz/dns-tester-go/commit/5e8f790c94d01fd0ed1e9a4e2a344872265499f4))
+* update branch name in ci master => main ([fd8d7a4](https://github.com/sudo-Tiz/dns-tester-go/commit/fd8d7a42488fbddc37c998315877daee966510b5))
 
 # Changelog
 

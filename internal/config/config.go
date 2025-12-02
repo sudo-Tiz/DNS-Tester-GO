@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/normalize"
+	"github.com/sudo-Tiz/dns-tester-go/internal/normalize"
 	"gopkg.in/yaml.v3"
 )
 

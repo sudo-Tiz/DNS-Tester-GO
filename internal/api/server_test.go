@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/config"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/models"
+	"github.com/sudo-Tiz/dns-tester-go/internal/config"
+	"github.com/sudo-Tiz/dns-tester-go/internal/models"
 )
 
 const mockTaskID = "mock-task-id"

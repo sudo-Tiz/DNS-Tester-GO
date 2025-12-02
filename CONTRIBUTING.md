@@ -3,8 +3,8 @@
 ## Development Setup
 
 ```bash
-git clone https://github.com/sudo-Tiz/DNS-Tester-GO.git
-cd DNS-Tester-GO
+git clone https://github.com/sudo-Tiz/dns-tester-go.git
+cd dns-tester-go
 
 # Install dependencies
 go mod download
@@ -144,9 +144,9 @@ cd website/
 
 | Channel | Link |
 |---------|------|
-| Issues | [GitHub Issues](https://github.com/sudo-Tiz/DNS-Tester-GO/issues) |
-| Discussions | [GitHub Discussions](https://github.com/sudo-Tiz/DNS-Tester-GO/discussions) |
-| Docs | [Documentation](https://sudo-Tiz.github.io/DNS-Tester-GO) |
+| Issues | [GitHub Issues](https://github.com/sudo-Tiz/dns-tester-go/issues) |
+| Discussions | [GitHub Discussions](https://github.com/sudo-Tiz/dns-tester-go/discussions) |
+| Docs | [Documentation](https://sudo-Tiz.github.io/dns-tester-go) |
 
 ## Code of Conduct
 

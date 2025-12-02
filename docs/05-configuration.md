@@ -1,6 +1,6 @@
 # Configuration
 
-YAML configuration reference for DNS-Tester-GO.
+YAML configuration reference for dns-tester-go.
 
 ---
 

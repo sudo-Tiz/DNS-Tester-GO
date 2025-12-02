@@ -9,8 +9,8 @@ Choose your installation method.
 | Method | Use Case | Command |
 |--------|----------|---------|
 | **Docker** | Production, testing | `docker compose --profile prod up -d` |
-| **Go Install** | CLI or Development | `go install github.com/sudo-Tiz/DNS-Tester-GO/cmd/dnstestergo@latest` |
-| **Binary** | No Go/Docker | [Download from Releases](https://github.com/sudo-Tiz/DNS-Tester-GO/releases) |
+| **Go Install** | CLI or Development | `go install github.com/sudo-Tiz/dns-tester-go/cmd/dnstestergo@latest` |
+| **Binary** | No Go/Docker | [Download from Releases](https://github.com/sudo-Tiz/dns-tester-go/releases) |
 | **Source** | Development | `make build` |
 
 ---
@@ -18,8 +18,8 @@ Choose your installation method.
 ## 🐳 Docker (Recommended)
 
 ```bash
-git clone https://github.com/sudo-Tiz/DNS-Tester-GO.git
-cd DNS-Tester-GO
+git clone https://github.com/sudo-Tiz/dns-tester-go.git
+cd dns-tester-go
 
 # Production setup (API + Worker + Redis)
 cp conf/config.example.yaml conf/config.yaml  # Create config file
@@ -35,7 +35,7 @@ docker compose --profile dev up -d
 ## 🔧 Go Install
 
 ```bash
-go install github.com/sudo-Tiz/DNS-Tester-GO/cmd/dnstestergo@latest
+go install github.com/sudo-Tiz/dns-tester-go/cmd/dnstestergo@latest
 ```
 
 ---
@@ -43,8 +43,8 @@ go install github.com/sudo-Tiz/DNS-Tester-GO/cmd/dnstestergo@latest
 ## 🛠️ Build from Source
 
 ```bash
-git clone https://github.com/sudo-Tiz/DNS-Tester-GO.git
-cd DNS-Tester-GO
+git clone https://github.com/sudo-Tiz/dns-tester-go.git
+cd dns-tester-go
 make build
 ```
 

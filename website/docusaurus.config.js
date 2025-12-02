@@ -16,12 +16,12 @@ const config = {
   url: 'https://sudo-Tiz.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/DNS-Tester-GO/',
+  baseUrl: '/dns-tester-go/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'sudo-Tiz', // Usually your GitHub org/user name.
-  projectName: 'DNS-Tester-GO', // Usually your repo name.
+  projectName: 'dns-tester-go', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -65,7 +65,7 @@ const config = {
         docs: {
           sidebarPath: './sidebars.js',
           editUrl:
-            'https://github.com/sudo-Tiz/DNS-Tester-GO/tree/main/website/',
+            'https://github.com/sudo-Tiz/dns-tester-go/tree/main/website/',
         },
         blog: false,
         theme: {
@@ -94,7 +94,7 @@ const config = {
             label: 'Documentation',
           },
           {
-            href: 'https://github.com/sudo-Tiz/DNS-Tester-GO',
+            href: 'https://github.com/sudo-Tiz/dns-tester-go',
             label: 'GitHub',
             position: 'right',
           },
@@ -125,11 +125,11 @@ const config = {
             items: [
               {
                 label: 'GitHub Issues',
-                href: 'https://github.com/sudo-Tiz/DNS-Tester-GO/issues',
+                href: 'https://github.com/sudo-Tiz/dns-tester-go/issues',
               },
               {
                 label: 'GitHub Discussions',
-                href: 'https://github.com/sudo-Tiz/DNS-Tester-GO/discussions',
+                href: 'https://github.com/sudo-Tiz/dns-tester-go/discussions',
               },
             ],
           },
@@ -138,7 +138,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/sudo-Tiz/DNS-Tester-GO',
+                href: 'https://github.com/sudo-Tiz/dns-tester-go',
               },
               {
                 label: 'Original Python Project',

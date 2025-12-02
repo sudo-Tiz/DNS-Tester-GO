@@ -1,6 +1,6 @@
 # Architecture
 
-System architecture for DNS-Tester-GO.
+System architecture for dns-tester-go.
 
 ---
 
@@ -223,7 +223,7 @@ graph TB
 
 ## ⚡ Performance
 
-### DNS-Tester-GO (Estimated)
+### dns-tester-go (Estimated)
 
 | Metric | Value |
 |--------|-------|

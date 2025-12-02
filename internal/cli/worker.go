@@ -16,10 +16,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/cobra"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/config"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/models"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/resolver"
-	"github.com/sudo-Tiz/DNS-Tester-GO/internal/tasks"
+	"github.com/sudo-Tiz/dns-tester-go/internal/config"
+	"github.com/sudo-Tiz/dns-tester-go/internal/models"
+	"github.com/sudo-Tiz/dns-tester-go/internal/resolver"
+	"github.com/sudo-Tiz/dns-tester-go/internal/tasks"
 )
 
 // NewWorkerCommand creates the 'worker' subcommand for running standalone Redis workers
