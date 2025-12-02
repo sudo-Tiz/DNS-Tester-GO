@@ -273,4 +273,3 @@ docker run --rm \
 - [API Reference](03-api.md) - REST API documentation
 - [Configuration](05-configuration.md) - Config file format and DNS server settings
 - [Quick Start](01-quickstart.md) - Deployment guide
-- [Examples](08-examples.md) - Real-world usage examples
