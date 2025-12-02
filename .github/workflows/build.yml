@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Generate Swagger docs
-        run: make swagger-gen
+        run: make swagger
       - name: Build all binaries
         run: |
           echo "🔨 Building dnstestergo (main CLI)..."

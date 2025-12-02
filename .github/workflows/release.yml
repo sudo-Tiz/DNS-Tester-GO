@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Generate Swagger docs
-        run: make swagger-gen
+        run: make swagger
       - name: Run go vet
         run: go vet ./...
       - name: Run unit tests
@@ -72,7 +72,7 @@ jobs:
           fi
       - name: Generate Swagger docs
         if: steps.get_version.outputs.has_version == 'true'
-        run: make swagger-gen
+        run: make swagger
       - name: Build multi-platform binaries
         if: steps.get_version.outputs.has_version == 'true'
         run: |

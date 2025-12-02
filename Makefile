@@ -1,7 +1,9 @@
-.PHONY: help build install test test-verbose clean deps install-pre-commit lint
-.PHONY: docker-build-all docker-build-server docker-build-worker docker-build-query docker-build-dev
-.PHONY: docker-dev docker-prod docker-test docker-down docker-clean
-.PHONY: docker-logs docker-scale-workers
+.PHONY: build build-all clean deps docker-build-all docker-build-dev \
+    docker-build-query docker-build-server docker-build-test docker-clean \
+    docker-dev docker-down docker-logs docker-prod docker-scale-workers \
+    install install-pre-commit lint pre-commit swagger test test-e2e \
+    test-e2e-docker test-verbose
+
 
 # Default target
 help:
@@ -30,7 +32,7 @@ help:
 	@echo ""
 	@echo "=== Other ==="
 	@echo "  deps                 Download and tidy dependencies"
-	@echo "  swagger-gen          Generate Swagger docs (run after API changes)"
+	@echo "  swagger              Generate Swagger docs (run after API changes)"
 	@echo "  install-pre-commit   Install pre-commit hooks"
 	@echo "  clean                Clean build artifacts"
 
@@ -219,7 +221,7 @@ deps:
 # ============================================================================
 
 # Generate Swagger documentation (run manually after API changes)
-swagger-gen:
+swagger:
 	@echo "Generating Swagger docs..."
 	@go run github.com/swaggo/swag/cmd/swag@latest init \
 		-g cmd/api/main.go -o internal/api/docs \
@@ -227,20 +229,3 @@ swagger-gen:
 	@echo "✅ Swagger docs → internal/api/docs/"
 	@echo "   - swagger.yaml, swagger.json (versioned)"
 	@echo "   - docs.go (auto-generated, gitignored)"
-
-# Clean Swagger documentation
-swagger-clean:
-	@rm -f internal/api/docs/docs.go internal/api/docs/swagger.json internal/api/docs/swagger.yaml
-	@echo "✅ Swagger docs cleaned"
-
-# Validate OpenAPI specification
-swagger-validate:
-	@if command -v swagger > /dev/null; then \
-		swagger validate internal/api/docs/swagger.yaml && echo "✅ OpenAPI spec valid"; \
-	else \
-		echo "⚠️  Install: go install github.com/go-swagger/go-swagger/cmd/swagger@latest"; \
-		exit 1; \
-	fi
-
-# Generate and validate in one command
-swagger: swagger-gen swagger-validate
