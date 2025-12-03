@@ -295,10 +295,8 @@ func (c *APIConfig) GetMaxRetries() int {
 }
 
 // ApplyIntOverride applies a CLI flag override to a config int field with default fallback.
-// If the CLI flag was changed and the value is positive, it overrides the config value.
-// Otherwise, if the config value is zero, the default value is applied.
 func ApplyIntOverride(flagChanged bool, flagValue int, target *int, defaultVal int) {
-	if flagChanged && flagValue > 0 {
+	if flagChanged {
 		*target = flagValue
 	} else if *target == 0 {
 		*target = defaultVal
@@ -306,8 +304,6 @@ func ApplyIntOverride(flagChanged bool, flagValue int, target *int, defaultVal i
 }
 
 // ApplyStringOverride applies a CLI flag override to a config string field with default fallback.
-// If the CLI value is non-empty, it overrides the config value.
-// Otherwise, if the config value is empty, the default value is applied.
 func ApplyStringOverride(cliValue string, target *string, defaultVal string) {
 	if cliValue != "" {
 		*target = cliValue
