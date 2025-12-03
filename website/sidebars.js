@@ -14,8 +14,11 @@ const sidebars = {
     'architecture',
     'monitoring',
     'troubleshooting',
-    'contributing',
-    'todo',
+    {
+      type: 'category',
+      label: 'Developers',
+      items: ['contributing', 'todo'],
+    },
   ],
 };
 
