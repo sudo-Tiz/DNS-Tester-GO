@@ -3,7 +3,7 @@
 # ============================================================================
 # Stage 1: Builder - Compile all Go binaries
 # ============================================================================
-FROM golang:1.25-alpine AS builder
+FROM golang:1.25.4-alpine AS builder
 
 WORKDIR /build
 
@@ -48,7 +48,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 # ============================================================================
 # Stage 2: Dev - Development environment for testing
 # ============================================================================
-FROM golang:1.25-alpine AS dev
+FROM golang:1.25.4-alpine AS dev
 
 WORKDIR /app
 
@@ -73,24 +73,24 @@ WORKDIR /app
 
 # Install runtime dependencies
 RUN apk --no-cache add ca-certificates tzdata wget && \
-    addgroup -g 1000 dnstester && \
-    adduser -D -u 1000 -G dnstester dnstester
+    addgroup -g 1000 dnstestergo && \
+    adduser -D -u 1000 -G dnstestergo dnstestergo
 
 # Copy binary and config
 COPY --from=builder /build/bin/dnstestergo-server /usr/local/bin/
 COPY --from=builder /build/conf/config.example.yaml /app/conf/config.yaml
 
 # Set ownership
-RUN chown -R dnstester:dnstester /app
+RUN chown -R dnstestergo:dnstestergo /app
 
-USER dnstester
+USER dnstestergo
 
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1
 
-ENTRYPOINT ["dnstestergo-server", "server"]
+ENTRYPOINT ["dnstestergo-server"]
 CMD ["--config", "/app/conf/config.yaml"]
 
 # ============================================================================
@@ -102,20 +102,20 @@ WORKDIR /app
 
 # Install runtime dependencies
 RUN apk --no-cache add ca-certificates tzdata && \
-    addgroup -g 1000 dnstester && \
-    adduser -D -u 1000 -G dnstester dnstester
+    addgroup -g 1000 dnstestergo && \
+    adduser -D -u 1000 -G dnstestergo dnstestergo
 
 # Copy binary and config
 COPY --from=builder /build/bin/dnstestergo-worker /usr/local/bin/
 COPY --from=builder /build/conf/config.example.yaml /app/conf/config.yaml
 
 # Set ownership
-RUN chown -R dnstester:dnstester /app
+RUN chown -R dnstestergo:dnstestergo /app
 
-USER dnstester
+USER dnstestergo
 
 # Redis URL will be passed via --redis flag from docker-compose
-ENTRYPOINT ["dnstestergo-worker", "worker"]
+ENTRYPOINT ["dnstestergo-worker"]
 CMD ["--config", "/app/conf/config.yaml"]
 
 # ============================================================================
@@ -127,24 +127,23 @@ WORKDIR /app
 
 # Install runtime dependencies
 RUN apk --no-cache add ca-certificates tzdata && \
-    addgroup -g 1000 dnstester && \
-    adduser -D -u 1000 -G dnstester dnstester
+    addgroup -g 1000 dnstestergo && \
+    adduser -D -u 1000 -G dnstestergo dnstestergo
 
 # Copy binaries
 COPY --from=builder /build/bin/dnstestergo-query /usr/local/bin/
-COPY --from=builder /build/bin/dnstestergo /usr/local/bin/
 COPY --from=builder /build/conf/config.example.yaml /app/conf/config.yaml
 
 # Set ownership
-RUN chown -R dnstester:dnstester /app
+RUN chown -R dnstestergo:dnstestergo /app
 
-USER dnstester
+USER dnstestergo
 
-ENTRYPOINT ["dnstestergo"]
+ENTRYPOINT ["dnstestergo-query"]
 CMD ["--help"]
 
 # ============================================================================
-# Stage 6: All - All-in-one image (dev/test)
+# Stage 6: All - All-in-one image
 # ============================================================================
 FROM alpine:3.19 AS all
 
@@ -152,20 +151,17 @@ WORKDIR /app
 
 # Install runtime dependencies
 RUN apk --no-cache add ca-certificates tzdata wget && \
-    addgroup -g 1000 dnstester && \
-    adduser -D -u 1000 -G dnstester dnstester
+    addgroup -g 1000 dnstestergo && \
+    adduser -D -u 1000 -G dnstestergo dnstestergo
 
 # Copy ALL binaries
 COPY --from=builder /build/bin/dnstestergo /usr/local/bin/
-COPY --from=builder /build/bin/dnstestergo-server /usr/local/bin/
-COPY --from=builder /build/bin/dnstestergo-worker /usr/local/bin/
-COPY --from=builder /build/bin/dnstestergo-query /usr/local/bin/
 COPY --from=builder /build/conf/config.example.yaml /app/conf/config.yaml
 
 # Set ownership
-RUN chown -R dnstester:dnstester /app
+RUN chown -R dnstestergo:dnstestergo /app
 
-USER dnstester
+USER dnstestergo
 
 EXPOSE 5000
 
@@ -173,5 +169,5 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1
 
 # Default: start server in memory mode
-ENTRYPOINT ["dnstestergo-server", "server"]
+ENTRYPOINT ["dnstestergo"]
 CMD ["--config", "/app/conf/config.yaml"]

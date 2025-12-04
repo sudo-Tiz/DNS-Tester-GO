@@ -40,6 +40,8 @@ services:
     networks:
       - dns-tester
   dnstestergo-server:
+    image: ghcr.io/sudo-tiz/dns-tester-go:server-latest
+    pull_policy: missing
     build:
       context: .
       target: server
@@ -67,6 +69,8 @@ services:
       - dns-tester
     command: ["--config", "/app/conf/config.yaml", "--redis", "redis://redis:6379/0"]
   dnstestergo-worker:
+    image: ghcr.io/sudo-tiz/dns-tester-go:worker-latest
+    pull_policy: missing
     build:
       context: .
       target: worker
@@ -90,6 +94,8 @@ services:
     command: ["--config", "/app/conf/config.yaml", "--redis", "redis://redis:6379/0"]
   # Optional: Single worker with metrics enabled (uncomment for development)
   # dnstestergo-worker-with-metrics:
+  #   image: ghcr.io/sudo-tiz/dns-tester-go:worker-latest
+  #   pull_policy: missing
   #   build:
   #     context: .
   #     target: worker
@@ -109,9 +115,11 @@ services:
 
   # ============================================================================
   # Query: CLI tool for one-off DNS queries
-  # Usage: docker-compose run --rm dnstestergo-query query example.com A
+  # Usage: docker-compose run --rm dnstestergo-query query example.com udp://8.8.8.8:53
   # ============================================================================
   dnstestergo-query:
+    image: ghcr.io/sudo-tiz/dns-tester-go:query-latest
+    pull_policy: missing
     build:
       context: .
       target: query
@@ -120,7 +128,7 @@ services:
       - CONFIG_PATH=/app/conf/config.yaml
     volumes:
       - ./conf/config.yaml:/app/conf/config.yaml
-    entrypoint: ["dnstestergo"]
+    entrypoint: ["dnstestergo-query"]
     networks:
       - dns-tester
   # ============================================================================
