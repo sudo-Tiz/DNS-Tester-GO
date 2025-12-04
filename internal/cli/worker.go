@@ -85,11 +85,15 @@ func runWorker(cmd *cobra.Command, configPath, redisURL string, concurrency, met
 		os.Exit(1)
 	}
 
-	// Apply CLI overrides to DNS config with defaults
-	config.ApplyIntOverride(cmd.Flags().Changed("dns-timeout"), dnsTimeout, &cfg.DNS.Timeout, 5)
-	config.ApplyIntOverride(cmd.Flags().Changed("max-concurrent"), maxConcurrentQueries, &cfg.DNS.MaxConcurrentQueries, 500)
-	config.ApplyIntOverride(cmd.Flags().Changed("max-retries"), maxRetries, &cfg.DNS.MaxRetries, 3)
-
+	if cmd.Flags().Changed("dns-timeout") {
+		cfg.DNS.Timeout = dnsTimeout
+	}
+	if cmd.Flags().Changed("max-concurrent") {
+		cfg.DNS.MaxConcurrentQueries = maxConcurrentQueries
+	}
+	if cmd.Flags().Changed("max-retries") {
+		cfg.DNS.MaxRetries = maxRetries
+	}
 	if len(cfg.Servers) == 0 {
 		slog.Warn("No DNS servers configured - worker will process tasks with explicit targets only", "path", configPath)
 	} else {

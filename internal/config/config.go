@@ -46,8 +46,8 @@ type APIConfig struct {
 
 // RateLimitConfig controls tollbooth rate limiting.
 type RateLimitConfig struct {
-	RequestsPerSecond int `yaml:"requests_per_second,omitempty"`
-	BurstSize         int `yaml:"burst_size,omitempty"`
+	RequestsPerSecond int `yaml:"requests_per_second"`
+	BurstSize         int `yaml:"burst_size"`
 }
 
 // ServerConfig controls HTTP server timeouts and binding.
@@ -192,7 +192,7 @@ func (c *APIConfig) GetDNSTargets() []DNSTarget {
 // GetRateLimitRequestsPerSecond provides default fallback.
 // Returns 0 if explicitly set to 0 (disables rate limiting).
 func (c *APIConfig) GetRateLimitRequestsPerSecond() int {
-	if c.RateLimiting.RequestsPerSecond >= 0 {
+	if c.RateLimiting.RequestsPerSecond > 0 {
 		return c.RateLimiting.RequestsPerSecond
 	}
 	return 10
@@ -292,22 +292,4 @@ func (c *APIConfig) GetMaxRetries() int {
 		return c.DNS.MaxRetries
 	}
 	return 3
-}
-
-// ApplyIntOverride applies a CLI flag override to a config int field with default fallback.
-func ApplyIntOverride(flagChanged bool, flagValue int, target *int, defaultVal int) {
-	if flagChanged {
-		*target = flagValue
-	} else if *target == 0 {
-		*target = defaultVal
-	}
-}
-
-// ApplyStringOverride applies a CLI flag override to a config string field with default fallback.
-func ApplyStringOverride(cliValue string, target *string, defaultVal string) {
-	if cliValue != "" {
-		*target = cliValue
-	} else if *target == "" {
-		*target = defaultVal
-	}
 }

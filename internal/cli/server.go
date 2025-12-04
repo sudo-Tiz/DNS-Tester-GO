@@ -106,29 +106,42 @@ func runServer(cmd *cobra.Command, configPath, redisURL, host, port string, maxW
 		slog.Error("Failed to load config", "error", err)
 		os.Exit(1)
 	}
-
-	// Apply basic overrides
 	if host != "" {
 		cfg.Server.Host = host
 	}
 	if port != "" {
 		cfg.Server.Port = port
 	}
-
-	// Apply CLI flag overrides with defaults
-	config.ApplyIntOverride(cmd.Flags().Changed("workers"), maxWorkers, &cfg.Worker.MaxWorkers, 4)
-	config.ApplyIntOverride(cmd.Flags().Changed("dns-timeout"), dnsTimeout, &cfg.DNS.Timeout, 5)
-	config.ApplyIntOverride(cmd.Flags().Changed("max-servers"), maxServersPerReq, &cfg.DNS.MaxServersPerReq, 50)
-	config.ApplyIntOverride(cmd.Flags().Changed("max-concurrent"), maxConcurrentQueries, &cfg.DNS.MaxConcurrentQueries, 500)
-	config.ApplyIntOverride(cmd.Flags().Changed("max-retries"), maxRetries, &cfg.DNS.MaxRetries, 3)
-	config.ApplyIntOverride(cmd.Flags().Changed("rate-limit-rps"), rateLimitRPS, &cfg.RateLimiting.RequestsPerSecond, 10)
-	config.ApplyIntOverride(cmd.Flags().Changed("rate-limit-burst"), rateLimitBurst, &cfg.RateLimiting.BurstSize, 20)
-	config.ApplyIntOverride(cmd.Flags().Changed("read-timeout"), readTimeout, &cfg.Server.ReadTimeout, 15)
-	config.ApplyIntOverride(cmd.Flags().Changed("write-timeout"), writeTimeout, &cfg.Server.WriteTimeout, 15)
-	config.ApplyIntOverride(cmd.Flags().Changed("idle-timeout"), idleTimeout, &cfg.Server.IdleTimeout, 60)
-
-	config.ApplyStringOverride(host, &cfg.Server.Host, "0.0.0.0")
-	config.ApplyStringOverride(port, &cfg.Server.Port, "5000")
+	if cmd.Flags().Changed("workers") {
+		cfg.Worker.MaxWorkers = maxWorkers
+	}
+	if cmd.Flags().Changed("dns-timeout") {
+		cfg.DNS.Timeout = dnsTimeout
+	}
+	if cmd.Flags().Changed("max-servers") {
+		cfg.DNS.MaxServersPerReq = maxServersPerReq
+	}
+	if cmd.Flags().Changed("max-concurrent") {
+		cfg.DNS.MaxConcurrentQueries = maxConcurrentQueries
+	}
+	if cmd.Flags().Changed("max-retries") {
+		cfg.DNS.MaxRetries = maxRetries
+	}
+	if cmd.Flags().Changed("rate-limit-rps") {
+		cfg.RateLimiting.RequestsPerSecond = rateLimitRPS
+	}
+	if cmd.Flags().Changed("rate-limit-burst") {
+		cfg.RateLimiting.BurstSize = rateLimitBurst
+	}
+	if cmd.Flags().Changed("read-timeout") {
+		cfg.Server.ReadTimeout = readTimeout
+	}
+	if cmd.Flags().Changed("write-timeout") {
+		cfg.Server.WriteTimeout = writeTimeout
+	}
+	if cmd.Flags().Changed("idle-timeout") {
+		cfg.Server.IdleTimeout = idleTimeout
+	}
 
 	// Log configuration status
 	if len(cfg.Servers) == 0 {
