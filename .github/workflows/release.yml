@@ -181,8 +181,8 @@ jobs:
             --target all \
             --platform linux/amd64,linux/arm64 \
             --push \
-            --tag ${REPO}:all-${VERSION} \
-            --tag ${REPO}:all-latest \
+            --tag ${REPO}:${VERSION} \
+            --tag ${REPO}:latest \
             --tag ${REPO}:latest \
             --tag ${REPO}:${VERSION} \
             --build-arg VERSION=${VERSION} \

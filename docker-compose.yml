@@ -131,29 +131,3 @@ services:
     entrypoint: ["dnstestergo-query"]
     networks:
       - dns-tester
-  # ============================================================================
-  # Test: Integration tests with full stack (Redis + Server + Worker)
-  # Usage: docker-compose --profile test up
-  # ============================================================================
-  test:
-    build:
-      context: .
-      target: builder
-    profiles: ["test"]
-    working_dir: /build
-    environment:
-      - RUN_INTEGRATION_TESTS=1
-      - API_BASE_URL=http://dnstestergo-server:5000
-    depends_on:
-      redis:
-        condition: service_healthy
-      dnstestergo-server:
-        condition: service_healthy
-    networks:
-      - dns-tester
-    command: ["go", "test", "-v", "-tags=integration", "./integration/..."]
-networks:
-  dns-tester:
-    driver: bridge
-volumes:
-  redis-data:
