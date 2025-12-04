@@ -39,16 +39,16 @@ func NewWorkerCommand() *cobra.Command {
 		Short: "Start a standalone DNS Tester worker",
 		Long:  `Start a standalone DNS Tester worker that processes tasks from Redis queue. Requires Redis to be configured.`,
 		Example: `  # Start worker with default settings
-  dnstester worker --redis redis://localhost:6379/0
+  dnstestergo worker --redis redis://localhost:6379/0
 
-  # Start worker with custom concurrency
-  dnstester worker --redis redis://localhost:6379/0 --concurrency 8
+  # Start worker with custom concurrency (number of parallel task processors)
+  dnstestergo worker --redis redis://localhost:6379/0 --concurrency 8
 
   # Start worker with metrics enabled (useful for single worker or dev)
-  dnstester worker --config /path/to/config.yaml --redis redis://localhost:6379/0 --enable-metrics
+  dnstestergo worker --config /path/to/config.yaml --redis redis://localhost:6379/0 --enable-metrics
 
   # Override DNS settings
-  dnstester worker --redis redis://localhost:6379/0 --dns-timeout 10 --max-retries 5`,
+  dnstestergo worker --redis redis://localhost:6379/0 --dns-timeout 10 --max-retries 5`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runWorker(cmd, configPath, redisURL, concurrency, metricsPort, enableMetrics,
 				dnsTimeout, maxConcurrentQueries, maxRetries)
@@ -57,14 +57,14 @@ func NewWorkerCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&configPath, "config", "c", os.Getenv("CONFIG_PATH"), "Path to config file")
 	cmd.Flags().StringVarP(&redisURL, "redis", "r", os.Getenv("REDIS_URL"), "Redis URL (required)")
-	cmd.Flags().IntVarP(&concurrency, "concurrency", "n", 4, "Number of concurrent workers")
+	cmd.Flags().IntVarP(&concurrency, "concurrency", "n", 4, "Number of parallel task processors (how many DNS lookups to process simultaneously)")
 	cmd.Flags().IntVarP(&metricsPort, "metrics-port", "m", 9091, "Port for Prometheus metrics endpoint (if enabled)")
 	cmd.Flags().BoolVarP(&enableMetrics, "enable-metrics", "M", false, "Enable metrics HTTP endpoint (useful for single worker, avoid port conflicts with multiple workers)")
 
 	// DNS configuration
-	cmd.Flags().IntVar(&dnsTimeout, "dns-timeout", 0, "DNS query timeout in seconds (default: from config or 5)")
-	cmd.Flags().IntVar(&maxConcurrentQueries, "max-concurrent", 0, "Maximum concurrent DNS queries (default: from config or 500)")
-	cmd.Flags().IntVar(&maxRetries, "max-retries", 0, "Number of retries per DNS query (default: from config or 3)")
+	cmd.Flags().IntVarP(&dnsTimeout, "dns-timeout", "T", 0, "DNS query timeout in seconds (default: from config or 5)")
+	cmd.Flags().IntVarP(&maxConcurrentQueries, "max-concurrent", "C", 0, "Maximum concurrent DNS queries (default: from config or 500)")
+	cmd.Flags().IntVarP(&maxRetries, "max-retries", "R", 0, "Number of retries per DNS query (default: from config or 3)")
 
 	_ = cmd.MarkFlagRequired("redis")
 

@@ -49,19 +49,19 @@ func NewServerCommand() *cobra.Command {
 		Short: "Start the DNS Tester API server",
 		Long:  `Start the DNS Tester API server. Automatically starts in-memory workers if Redis is not configured.`,
 		Example: `  # Start with default config
-  dnstester server
+  dnstestergo server
 
   # Start with Redis backend
-  dnstester server --redis redis://localhost:6379/0
+  dnstestergo server --redis redis://localhost:6379/0
 
   # Start with custom config
-  dnstester server --config /path/to/config.yaml
+  dnstestergo server --config /path/to/config.yaml
 
   # Start on custom host/port
-  dnstester server --host 0.0.0.0 --port 8080
+  dnstestergo server --host 0.0.0.0 --port 8080
 
   # Override DNS settings
-  dnstester server --dns-timeout 10 --max-retries 5`,
+  dnstestergo server --dns-timeout 10 --max-retries 5`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runServer(cmd, configPath, redisURL, host, port, maxWorkers,
 				dnsTimeout, maxServersPerReq, maxConcurrentQueries, maxRetries,
@@ -76,10 +76,10 @@ func NewServerCommand() *cobra.Command {
 	cmd.Flags().IntVarP(&maxWorkers, "workers", "w", 0, "Maximum number of workers (default: from config or 4)")
 
 	// DNS configuration
-	cmd.Flags().IntVar(&dnsTimeout, "dns-timeout", 0, "DNS query timeout in seconds (default: from config or 5)")
-	cmd.Flags().IntVar(&maxServersPerReq, "max-servers", 0, "Maximum DNS servers per request (default: from config or 50)")
-	cmd.Flags().IntVar(&maxConcurrentQueries, "max-concurrent", 0, "Maximum concurrent DNS queries (default: from config or 500)")
-	cmd.Flags().IntVar(&maxRetries, "max-retries", 0, "Number of retries per DNS query (default: from config or 3)")
+	cmd.Flags().IntVarP(&dnsTimeout, "dns-timeout", "T", 0, "DNS query timeout in seconds (default: from config or 5)")
+	cmd.Flags().IntVarP(&maxServersPerReq, "max-servers", "S", 0, "Maximum DNS servers per request (default: from config or 50)")
+	cmd.Flags().IntVarP(&maxConcurrentQueries, "max-concurrent", "C", 0, "Maximum concurrent DNS queries (default: from config or 500)")
+	cmd.Flags().IntVarP(&maxRetries, "max-retries", "R", 0, "Number of retries per DNS query (default: from config or 3)")
 
 	// Rate limiting
 	cmd.Flags().IntVar(&rateLimitRPS, "rate-limit-rps", 0, "Rate limit requests per second (0 = disable, default: from config or 10)")
