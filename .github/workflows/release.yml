@@ -183,8 +183,6 @@ jobs:
             --push \
             --tag ${REPO}:${VERSION} \
             --tag ${REPO}:latest \
-            --tag ${REPO}:latest \
-            --tag ${REPO}:${VERSION} \
             --build-arg VERSION=${VERSION} \
             --cache-from type=gha \
             .
